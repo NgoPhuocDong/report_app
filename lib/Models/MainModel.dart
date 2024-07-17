@@ -1,0 +1,1 @@
+//lớp MainModel chứa các biến toàn cục.
