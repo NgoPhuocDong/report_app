@@ -23,7 +23,8 @@ class ReportsPageState extends State<ReportsPage> {
       case "DOANH THU":
         return const RevenuePage();
       case "BÁC SĨ":
-        return const DoctorPage();
+        return DoctorPage(initialDataType: '',);
+        //return const DoctorPage();
       default:
         return DashboardPage(getapi: getapi);
     }
