@@ -12,7 +12,7 @@ class DoctorPage extends StatefulWidget {
 }
 
 class _DoctorPageState extends State<DoctorPage> {
-  String currentDataType = '';
+  late String currentDataType;
   List<DoanhThu> reportData = [];
   final ScrollController _scrollController = ScrollController();
   final DoctorService _doctorService = DoctorService();
@@ -31,12 +31,10 @@ class _DoctorPageState extends State<DoctorPage> {
         reportData = data;
       });
     } catch (e) {
-      // Xử lý lỗi tại đây nếu cần
       setState(() {
         reportData = [];
       });
     }
-
     _scrollController.jumpTo(0);
   }
 
@@ -58,7 +56,7 @@ class _DoctorPageState extends State<DoctorPage> {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
               decoration: BoxDecoration(
-                color: Colors.blue.shade100, // Màu nền của Container bao quanh các nút (có thể thay đổi theo ý muốn)
+                color: Colors.blue.shade100,
                 borderRadius: BorderRadius.circular(25.0),
                 boxShadow: [
                   BoxShadow(
@@ -114,7 +112,6 @@ class _DoctorPageState extends State<DoctorPage> {
       ),
     );
   }
-
 
   Widget _buildFilterButtons(BuildContext context) {
     final Color buttonColor = Colors.white.withOpacity(0.6);
@@ -192,8 +189,6 @@ class _DoctorPageState extends State<DoctorPage> {
       ),
     );
   }
-
-
 
   Widget _buildReportCard(BuildContext context, String title, String value) {
     return Container(
@@ -280,38 +275,24 @@ class _DateRangeSelectorState extends State<DateRangeSelector> {
           width: 50,
           child: Text(label, style: TextStyle(fontSize: 16)),
         ),
-        SizedBox(width: 10),
         Expanded(
-          child: InkWell(
-            onTap: () async {
-              final DateTime? picked = await showDatePicker(
+          child: ElevatedButton(
+            onPressed: () async {
+              DateTime? selected = await showDatePicker(
                 context: context,
                 initialDate: selectedDate ?? DateTime.now(),
                 firstDate: DateTime(2000),
-                lastDate: DateTime(2100),
+                lastDate: DateTime(2101),
               );
-              if (picked != null) {
-                onDateSelected(picked);
+              if (selected != null && selected != selectedDate) {
+                onDateSelected(selected);
               }
             },
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 13),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    selectedDate != null
-                        ? '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}'
-                        : 'Chọn ngày',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  Icon(Icons.calendar_today),
-                ],
-              ),
+            child: Text(selectedDate == null
+                ? 'Chọn ngày'
+                : '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}'),
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.black, backgroundColor: Colors.grey[200],
             ),
           ),
         ),
