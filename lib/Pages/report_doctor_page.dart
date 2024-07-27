@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import '../Models/ReportDoctorModel.dart';
 
 class ReportDoctorPage extends StatefulWidget {
+  final String initialDataType;
+
+  ReportDoctorPage({required this.initialDataType, required String dataType});
+
   @override
   _ReportDoctorPageState createState() => _ReportDoctorPageState();
 }
 
 class _ReportDoctorPageState extends State<ReportDoctorPage> {
+  String currentDataType = '';
   List<DoanhThu> reportData = [];
+  final ScrollController _scrollController = ScrollController(); // Thêm ScrollController
 
   @override
   void initState() {
     super.initState();
+    currentDataType = widget.initialDataType;
     fetchReportData();
   }
 
@@ -22,19 +28,18 @@ class _ReportDoctorPageState extends State<ReportDoctorPage> {
     final response = await http.get(Uri.parse('https://apishpt.doctorsaigon.net/api/v2/his/DataTest'));
 
     if (response.statusCode == 200) {
-      print(response.body); // In ra dữ liệu để kiểm tra cấu trúc
-
       final jsonResponse = jsonDecode(response.body);
       final body = jsonResponse['body'];
-
-      // Chuyển đổi chuỗi JSON thành đối tượng Map
       final decodedBody = jsonDecode(body);
-
-      // Kiểm tra xem 'obdata' có phải là null không
       final obdataString = decodedBody['obdata'];
+
       if (obdataString != null) {
-        final obdataJson = jsonDecode(obdataString); // Parse chuỗi JSON bên trong obdata
-        final dsdoanhthutheobs = jsonDecode(obdataJson['dsdoanhthutheobs']);
+        final obdataJson = jsonDecode(obdataString);
+        final dsdoanhthutheobs = jsonDecode(
+            currentDataType == 'BÁC SĨ THỰC HIỆN'
+                ? obdataJson['dsdoanhthutheobsthuchien']
+                : obdataJson['dsdoanhthutheobs']
+        );
 
         if (dsdoanhthutheobs != null) {
           setState(() {
@@ -55,6 +60,16 @@ class _ReportDoctorPageState extends State<ReportDoctorPage> {
     } else {
       throw Exception('Failed to load data');
     }
+
+    // Cuộn về đầu danh sách sau khi dữ liệu được tải
+    _scrollController.jumpTo(0);
+  }
+
+  void _onTabButtonPressed(String dataType) {
+    setState(() {
+      currentDataType = dataType;
+      fetchReportData();
+    });
   }
 
   @override
@@ -84,15 +99,15 @@ class _ReportDoctorPageState extends State<ReportDoctorPage> {
             children: [
               _buildTabButton(context, 'DASHBOARD', false),
               _buildTabButton(context, 'DOANH THU', false),
-              _buildTabButton(context, 'BÁC SĨ', true),
+              _buildTabButton(context, 'BÁC SĨ', false),
             ],
           ),
           SizedBox(height: 16.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildTabButton(context, 'BÁC SĨ CHỈ ĐỊNH', true),
-              _buildTabButton(context, 'BÁC SĨ THỰC HIỆN', false),
+              _buildTabButton(context, 'BÁC SĨ CHỈ ĐỊNH', currentDataType == 'BÁC SĨ CHỈ ĐỊNH'),
+              _buildTabButton(context, 'BÁC SĨ THỰC HIỆN', currentDataType == 'BÁC SĨ THỰC HIỆN'),
             ],
           ),
           SizedBox(height: 16.0),
@@ -123,6 +138,7 @@ class _ReportDoctorPageState extends State<ReportDoctorPage> {
               child: reportData.isEmpty
                   ? Center(child: CircularProgressIndicator())
                   : GridView.builder(
+                controller: _scrollController, // Gán ScrollController cho GridView
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   crossAxisSpacing: 8.0,
@@ -133,8 +149,8 @@ class _ReportDoctorPageState extends State<ReportDoctorPage> {
                   final item = reportData[index];
                   return _buildReportCard(
                     context,
-                    item.ten ?? 'Unknown Title', // Sử dụng item.ten thay vì item['ten']
-                    item.value?.toString() ?? '0.0', // Sử dụng item.value thay vì item['value']
+                    item.ten ?? 'Unknown Title',
+                    item.value?.toString() ?? '0.0',
                   );
                 },
               ),
@@ -148,7 +164,7 @@ class _ReportDoctorPageState extends State<ReportDoctorPage> {
   Widget _buildTabButton(BuildContext context, String title, bool selected) {
     return ElevatedButton(
       onPressed: () {
-        // Handle tab change
+        _onTabButtonPressed(title);
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: selected ? Colors.blue : Colors.grey,

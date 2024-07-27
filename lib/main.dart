@@ -1,5 +1,6 @@
+// lib/main.dart
 import 'package:flutter/material.dart';
-import 'Pages/report_doctor_page.dart'; // Import ReportPage
+import 'Pages/report_doctor_page.dart'; // Import ReportDoctorPage
 
 void main() {
   runApp(MyApp());
@@ -13,29 +14,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+      home: ReportDoctorPage(dataType: 'BÁC SĨ CHỈ ĐỊNH', initialDataType: ''), // Set the default page to BÁC SĨ CHỈ ĐỊNH
       routes: {
-        '/report': (context) => ReportDoctorPage(),
+        '/report': (context) => ReportDoctorPage(dataType: 'DEFAULT', initialDataType: ''), // Adjust 'DEFAULT' as needed
       },
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Home Page'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/report');
-          },
-          child: Text('Go to Report Page'),
-        ),
-      ),
     );
   }
 }
