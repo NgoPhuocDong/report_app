@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/doctor_service.dart';
 import '../model/report_doctor_model.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class DoctorPage extends StatefulWidget {
   final String initialDataType;
@@ -43,6 +44,29 @@ class _DoctorPageState extends State<DoctorPage> {
       currentDataType = dataType;
       fetchReportData();
     });
+  }
+
+  void _showDoctorRevenueChart(BuildContext context, String doctorName) {
+    // Dữ liệu mẫu cho biểu đồ (thay bằng dữ liệu thật của bạn)
+    final List<FlSpot> dataPoints = [
+      FlSpot(1, 250),
+      FlSpot(2, 120),
+      FlSpot(3, 315),
+      FlSpot(4, 200),
+      FlSpot(5, 150),
+      FlSpot(6, 300),
+      // ... thêm các điểm dữ liệu khác
+    ];
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return DoctorRevenueChart(
+          doctorName: doctorName,
+          dataPoints: dataPoints,
+        );
+      },
+    );
   }
 
   @override
@@ -179,10 +203,9 @@ class _DoctorPageState extends State<DoctorPage> {
             child: Text(
               title,
               style: TextStyle(
-                color: selected ? Colors.white : Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 14.0,
-              ),
+                  color: selected ? Colors.white : Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14.0),
             ),
           ),
         ),
@@ -191,25 +214,30 @@ class _DoctorPageState extends State<DoctorPage> {
   }
 
   Widget _buildReportCard(BuildContext context, String title, String value) {
-    return Container(
-      padding: EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        color: Colors.blue[700],
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            title,
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 8.0),
-          Text(
-            value,
-            style: TextStyle(color: Colors.yellow),
-          ),
-        ],
+    return GestureDetector(
+      onTap: () {
+        _showDoctorRevenueChart(context, title);
+      },
+      child: Container(
+        padding: EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color: Colors.blue[700],
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              title,
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8.0),
+            Text(
+              value,
+              style: TextStyle(color: Colors.yellow),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -295,6 +323,46 @@ class _DateRangeSelectorState extends State<DateRangeSelector> {
               foregroundColor: Colors.black, backgroundColor: Colors.grey[200],
             ),
           ),
+        ),
+      ],
+    );
+  }
+}
+
+class DoctorRevenueChart extends StatelessWidget {
+  final String doctorName;
+  final List<FlSpot> dataPoints;
+
+  DoctorRevenueChart({required this.doctorName, required this.dataPoints});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Biểu đồ doanh thu theo bác sĩ: $doctorName'),
+      content: Container(
+        width: double.maxFinite,
+        height: 300,
+        child: LineChart(
+          LineChartData(
+            lineBarsData: [
+              LineChartBarData(
+                spots: dataPoints,
+                isCurved: true,
+                barWidth: 2,
+                color: Colors.blue,
+                belowBarData: BarAreaData(show: false),
+                dotData: FlDotData(show: true),
+              ),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('Đóng'),
         ),
       ],
     );
