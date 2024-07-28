@@ -84,33 +84,27 @@ class _RevenuePageState extends State<RevenuePage> {
 
   Widget _buildRevenueItem(MainModel item) {
     return Container(
-      margin: EdgeInsets.all(8.0),
-      padding: EdgeInsets.all(12.0),
-      height: 100, // Chiều cao ô
+      padding: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        color: Color(0xFF103D67), // Màu ô
+        color: Color(0xFF103D67), // Màu ô giống với _buildReportCard
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start, // Đặt các thành phần bắt đầu từ đầu
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center, // Đặt các thành phần ở giữa
         children: [
           Text(
             item.title,
             style: TextStyle(
-              color: Color(0xFFFFFFFF),
+              color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 12, // Kích thước chữ tên doanh thu
             ),
             textAlign: TextAlign.center,
           ),
-          // Giảm khoảng cách giữa tên doanh mục và giá trị
-          SizedBox(height: 2.0), // Khoảng cách giữa tên doanh thu và giá trị
+          SizedBox(height: 8.0), // Khoảng cách giữa tên và giá trị giống với _buildReportCard
           Text(
             '${item.value} VND',
             style: TextStyle(
-              color: Color(0xFFDAE747),
-              fontSize: 10, // Kích thước chữ giá trị
+              color: Colors.yellow,
             ),
             textAlign: TextAlign.center,
           ),
@@ -118,6 +112,7 @@ class _RevenuePageState extends State<RevenuePage> {
       ),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {

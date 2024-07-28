@@ -50,21 +50,19 @@ class _DoctorPageState extends State<DoctorPage> {
 
   void _showDoctorRevenueChart(BuildContext context, String doctorName) {
     final List<FlSpot> dataPoints = [
-      FlSpot(1, 250),
-      FlSpot(2, 120),
-      FlSpot(3, 315),
-      FlSpot(4, 200),
-      FlSpot(5, 150),
-      FlSpot(6, 300),
-      // ... thêm các điểm dữ liệu khác
+      FlSpot(1, 25000000),
+      FlSpot(2, 20000000),
+      FlSpot(3, 34000000),
+      FlSpot(4, 25000000),
+      FlSpot(5, 15000000),
     ];
 
     showDialog(
       context: context,
       builder: (context) {
         return DoctorRevenueChart(
-          doctorName: doctorName,
-          dataPoints: dataPoints,
+          tenBacSi: doctorName, // Sửa tên tham số ở đây
+          duLieu: dataPoints,
         );
       },
     );
@@ -222,7 +220,7 @@ class _DoctorPageState extends State<DoctorPage> {
       child: Container(
         padding: EdgeInsets.all(8.0),
         decoration: BoxDecoration(
-          color: Colors.blue[700],
+          color: Color(0xFF103D67),
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Column(
