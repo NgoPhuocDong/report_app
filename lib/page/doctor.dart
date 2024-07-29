@@ -4,6 +4,7 @@ import '../model/report_doctor_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../widgets/doctor_revenue_chart.dart';
 import '../widgets/date_range_selector.dart';
+import 'package:intl/intl.dart';
 
 class DoctorPage extends StatefulWidget {
   final String initialDataType;
@@ -75,9 +76,9 @@ class _DoctorPageState extends State<DoctorPage> {
         color: const Color(0xFF294157),
         child: Column(
           children: [
-            SizedBox(height: 16.0),
+            SizedBox(height: 8.0), // Reduced the height
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+              margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4.0), // Reduced vertical margin
               decoration: BoxDecoration(
                 color: Colors.blue.shade100,
                 borderRadius: BorderRadius.circular(25.0),
@@ -97,18 +98,18 @@ class _DoctorPageState extends State<DoctorPage> {
                 ],
               ),
             ),
-            SizedBox(height: 16.0),
+            SizedBox(height: 8.0), // Reduced the height
             Align(
               alignment: Alignment.topRight,
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0), // Reduced vertical padding
                 child: _buildFilterButtons(context),
               ),
             ),
-            SizedBox(height: 16.0),
+            SizedBox(height: 8.0), // Reduced the height
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(8.0), // Reduced the padding
                 child: reportData.isEmpty
                     ? Center(child: CircularProgressIndicator())
                     : GridView.builder(
@@ -124,7 +125,7 @@ class _DoctorPageState extends State<DoctorPage> {
                     return _buildReportCard(
                       context,
                       item.ten ?? 'Unknown Title',
-                      '${item.value.toString()} VND' ?? '0.0',
+                      item.value ?? 0.0,  // Provide a default value of 0.0 if item.value is null
                     );
                   },
                 ),
@@ -156,7 +157,7 @@ class _DoctorPageState extends State<DoctorPage> {
               );
             },
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), // Reduced vertical padding
               decoration: BoxDecoration(
                 color: buttonColor,
                 borderRadius: BorderRadius.horizontal(left: Radius.circular(20)),
@@ -212,7 +213,10 @@ class _DoctorPageState extends State<DoctorPage> {
     );
   }
 
-  Widget _buildReportCard(BuildContext context, String title, String value) {
+  Widget _buildReportCard(BuildContext context, String title, double value) {
+    final formatter = NumberFormat('#,##0', 'en_US');
+    String formattedValue = formatter.format(value);
+
     return GestureDetector(
       onTap: () {
         _showDoctorRevenueChart(context, title);
@@ -223,17 +227,27 @@ class _DoctorPageState extends State<DoctorPage> {
           color: Color(0xFF103D67),
           borderRadius: BorderRadius.circular(8.0),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Stack(
           children: [
-            Text(
-              title,
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding: EdgeInsets.only(top: 8.0),
+                child: Text(
+                  title,
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              ),
             ),
-            SizedBox(height: 8.0),
-            Text(
-              value,
-              style: TextStyle(color: Colors.yellow),
+            Align(
+              alignment: Alignment.center,
+              child: Padding(
+                padding: EdgeInsets.only(top: 30.0), // Adjust this value as needed
+                child: Text(
+                  formattedValue + ' VND',
+                  style: TextStyle(color: Colors.yellow),
+                ),
+              ),
             ),
           ],
         ),
