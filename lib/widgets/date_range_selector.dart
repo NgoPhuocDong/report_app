@@ -62,24 +62,38 @@ class _DateRangeSelectorState extends State<DateRangeSelector> {
           width: 50,
           child: Text(label, style: TextStyle(fontSize: 16)),
         ),
+        SizedBox(width: 10),
         Expanded(
-          child: ElevatedButton(
-            onPressed: () async {
-              DateTime? selected = await showDatePicker(
+          child: InkWell(
+            onTap: () async {
+              final DateTime? picked = await showDatePicker(
                 context: context,
                 initialDate: selectedDate ?? DateTime.now(),
                 firstDate: DateTime(2000),
-                lastDate: DateTime(2101),
+                lastDate: DateTime(2100),
               );
-              if (selected != null && selected != selectedDate) {
-                onDateSelected(selected);
+              if (picked != null) {
+                onDateSelected(picked);
               }
             },
-            child: Text(selectedDate == null
-                ? 'Chọn ngày'
-                : '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}'),
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.black, backgroundColor: Colors.grey[200],
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 13),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    selectedDate != null
+                        ? '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}'
+                        : 'Chọn ngày',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  Icon(Icons.calendar_today),
+                ],
+              ),
             ),
           ),
         ),
