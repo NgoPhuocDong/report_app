@@ -51,18 +51,19 @@ class _DoctorPageState extends State<DoctorPage> {
 
   void _showDoctorRevenueChart(BuildContext context, String doctorName) {
     final List<FlSpot> dataPoints = [
-      FlSpot(1, 25000000),
-      FlSpot(2, 20000000),
-      FlSpot(3, 34000000),
-      FlSpot(4, 25000000),
-      FlSpot(5, 15000000),
+      FlSpot(23, 25000000),  // 23/07
+      FlSpot(24, 21000000),  // 24/07
+      FlSpot(25, 34000000),  // 25/07
+      FlSpot(26, 25000000),  // 26/07
+      FlSpot(27, 15000000),  // 27/07
+      FlSpot(28, 30000000),  // 28/07
     ];
 
     showDialog(
       context: context,
       builder: (context) {
         return DoctorRevenueChart(
-          tenBacSi: doctorName, // Sửa tên tham số ở đây
+          tenBacSi: doctorName,
           duLieu: dataPoints,
         );
       },
@@ -76,9 +77,9 @@ class _DoctorPageState extends State<DoctorPage> {
         color: const Color(0xFF294157),
         child: Column(
           children: [
-            SizedBox(height: 8.0), // Reduced the height
+            SizedBox(height: 8.0),
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4.0), // Reduced vertical margin
+              margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4.0),
               decoration: BoxDecoration(
                 color: Colors.blue.shade100,
                 borderRadius: BorderRadius.circular(25.0),
@@ -98,18 +99,18 @@ class _DoctorPageState extends State<DoctorPage> {
                 ],
               ),
             ),
-            SizedBox(height: 8.0), // Reduced the height
+            SizedBox(height: 8.0),
             Align(
               alignment: Alignment.topRight,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0), // Reduced vertical padding
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
                 child: _buildFilterButtons(context),
               ),
             ),
-            SizedBox(height: 8.0), // Reduced the height
+            SizedBox(height: 8.0),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(8.0), // Reduced the padding
+                padding: const EdgeInsets.all(8.0),
                 child: reportData.isEmpty
                     ? Center(child: CircularProgressIndicator())
                     : GridView.builder(
@@ -125,7 +126,7 @@ class _DoctorPageState extends State<DoctorPage> {
                     return _buildReportCard(
                       context,
                       item.ten ?? 'Unknown Title',
-                      item.value ?? 0.0,  // Provide a default value of 0.0 if item.value is null
+                      item.value ?? 0.0,
                     );
                   },
                 ),
@@ -157,7 +158,7 @@ class _DoctorPageState extends State<DoctorPage> {
               );
             },
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), // Reduced vertical padding
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
                 color: buttonColor,
                 borderRadius: BorderRadius.horizontal(left: Radius.circular(20)),
@@ -242,7 +243,7 @@ class _DoctorPageState extends State<DoctorPage> {
             Align(
               alignment: Alignment.center,
               child: Padding(
-                padding: EdgeInsets.only(top: 30.0), // Adjust this value as needed
+                padding: EdgeInsets.only(top: 30.0),
                 child: Text(
                   formattedValue + ' VND',
                   style: TextStyle(color: Colors.yellow),

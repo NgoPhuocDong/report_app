@@ -11,66 +11,30 @@ class DoctorRevenueChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       content: Container(
-        width: MediaQuery.of(context).size.width * 0.90, // Điều chỉnh chiều rộng của AlertDialog
+        width: MediaQuery.of(context).size.width * 0.90,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(tenBacSi, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            Text(
+              'Biểu đồ doanh thu - $tenBacSi',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.red, // Đặt màu chữ là màu đỏ
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Từ ngày 23/07 đến 28/07',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             SizedBox(height: 16),
             Container(
               height: 200,
-              child: LineChart(
-                LineChartData(
-                  lineBarsData: [
-                    LineChartBarData(
-                      spots: duLieu,
-                      isCurved: true,
-                      color: Colors.blue,
-                      barWidth: 2,
-                      belowBarData: BarAreaData(
-                        show: true,
-                        color: Colors.blue.withOpacity(0.3),
-                      ),
-                    ),
-                  ],
-                  titlesData: FlTitlesData(
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        getTitlesWidget: (value, meta) {
-                          switch (value.toInt()) {
-                            case 1:
-                              return Text('T2');
-                            case 2:
-                              return Text('T3');
-                            case 3:
-                              return Text('T4');
-                            case 4:
-                              return Text('T5');
-                            case 5:
-                              return Text('T6');
-                          }
-                          return Text('');
-                        },
-                      ),
-                    ),
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        getTitlesWidget: (value, meta) {
-                          if (value % 10000000 == 0) {
-                            return Text((value / 1000000).toStringAsFixed(0) + 'M');
-                          }
-                          return Text('');
-                        },
-                        reservedSize: 40, // Thêm dòng này để cung cấp thêm không gian cho các nhãn
-                      ),
-                    ),
-                  ),
-                  gridData: FlGridData(show: true),
-                  borderData: FlBorderData(show: true),
-                ),
-              ),
+              child: LineChart(_buildChartData()),
             ),
           ],
         ),
@@ -83,6 +47,72 @@ class DoctorRevenueChart extends StatelessWidget {
           child: Text(
             'Đóng',
             style: TextStyle(color: Colors.grey),
+          ),
+        ),
+      ],
+    );
+  }
+
+  LineChartData _buildChartData() {
+    return LineChartData(
+      gridData: FlGridData(show: true),
+      titlesData: FlTitlesData(
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            getTitlesWidget: (value, meta) {
+              if (value % 10 == 0) {
+                return Text((value / 1000000).toStringAsFixed(0) + ' Tr');
+              }
+              return Text('');
+            },
+            reservedSize: 40,
+          ),
+        ),
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            getTitlesWidget: (value, meta) {
+              switch (value.toInt()) {
+                case 23:
+                  return Text('23');
+                case 24:
+                  return Text('24');
+                case 25:
+                  return Text('25');
+                case 26:
+                  return Text('26');
+                case 27:
+                  return Text('27');
+                case 28:
+                  return Text('28');
+                default:
+                  return Text('');
+              }
+            },
+            reservedSize: 40,
+          ),
+        ),
+        topTitles: AxisTitles(
+          sideTitles: SideTitles(showTitles: false), // Ẩn tiêu đề ở phía trên biểu đồ
+        ),
+        rightTitles: AxisTitles(
+          sideTitles: SideTitles(showTitles: false), // Ẩn tiêu đề ở phía bên phải biểu đồ
+        ),
+      ),
+      borderData: FlBorderData(
+        show: true,
+        border: Border.all(color: Colors.black12),
+      ),
+      lineBarsData: [
+        LineChartBarData(
+          spots: duLieu,
+          isCurved: true,
+          color: Colors.blue,
+          barWidth: 2,
+          belowBarData: BarAreaData(
+            show: true,
+            color: Colors.blue.withOpacity(0.3),
           ),
         ),
       ],
